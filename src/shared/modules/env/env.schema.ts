@@ -9,6 +9,7 @@ export interface EnvSchema {
   JWT_SECRET: string;
   DATABASE_URL: string;
   REDIS_URL: string;
+  REDIS_PASSWORD: string;
   CHANNEL_ID: number;
   CHANNEL_IP: string;
 }
@@ -22,6 +23,7 @@ export const JoiEnvSchema = Joi.object<EnvSchema>({
   JWT_SECRET: Joi.string().required(),
   DATABASE_URL: Joi.string().required(),
   REDIS_URL: Joi.string().required(),
+  REDIS_PASSWORD: Joi.string().required(),
   CHANNEL_ID: Joi.number().required(),
   CHANNEL_IP: Joi.string().required(),
 });
