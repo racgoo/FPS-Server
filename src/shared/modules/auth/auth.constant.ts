@@ -1,9 +1,10 @@
 export enum AuthErrorCode {
   DOMAIN_PREFIX = 'S01',
-  INVALID_TOKEN = '001',
-  EXPIRED_TOKEN = '002',
-  UNAUTHORIZED = '003',
-  FORBIDDEN = '004',
+  UNAUTHORIZED = '001',
+  EXPIRED_ACCESS_TOKEN = '002',
+  EXPIRED_REFRESH_TOKEN = '003',
+  INVALID_TOKEN = '004',
+  FORBIDDEN = '005',
 }
 
 export enum TokenType {
@@ -13,5 +14,5 @@ export enum TokenType {
 
 export enum TokenExpireTime {
   ACCESS_TOKEN = '1m',
-  REFRESH_TOKEN = '7d',
+  REFRESH_TOKEN = '1s',
 }

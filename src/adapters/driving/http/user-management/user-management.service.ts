@@ -94,13 +94,15 @@ export class UserManagementService {
   }) {
     if (type === TokenType.ACCESS_TOKEN) {
       res.cookie(type, token, {
+        secure: false,
         httpOnly: true,
         maxAge: Time.TEN_MINUTE,
       });
     }
     if (type === TokenType.REFRESH_TOKEN) {
       res.cookie(type, token, {
-        path: '/user-management/reissue/',
+        secure: false,
+        path: '/user-management/reissue',
         httpOnly: true,
         maxAge: Time.WEEK,
       });

@@ -8,5 +8,5 @@ const { DOMAIN_PREFIX, UNAUTHORIZED } = AuthErrorCode;
 export class UnauthorizedException extends CustomException {
   readonly status = DEFAULT_EXCEPTION_STATUS.UNAUTHORIZED;
   readonly code = DOMAIN_PREFIX + UNAUTHORIZED;
-  readonly message = '인증이 필요합니다.';
+  readonly message = '잘못된 인증입니다.';
 }

@@ -52,8 +52,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('file')
   handleFile(client: Socket, payload: any): string {
-    console.log('file');
-    console.log(payload);
     // console.log('handleMessage', client, payload);
     return 'Hello world!';
   }

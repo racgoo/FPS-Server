@@ -8,5 +8,5 @@ const { DOMAIN_PREFIX, INVALID_TOKEN } = AuthErrorCode;
 export class InvalidTokenException extends CustomException {
   readonly status = DEFAULT_EXCEPTION_STATUS.UNAUTHORIZED;
   readonly code = DOMAIN_PREFIX + INVALID_TOKEN;
-  readonly message = '유효하지 않은 토큰입니다.';
+  readonly message = '잘못된 토큰입니다.';
 }

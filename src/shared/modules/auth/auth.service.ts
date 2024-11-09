@@ -20,7 +20,6 @@ export class AuthService {
           expiresIn: TokenExpireTime.REFRESH_TOKEN,
         });
     }
-    console.log('hi2222');
   }
 
   verifyToken(token: string) {
