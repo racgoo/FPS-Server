@@ -15,15 +15,23 @@ export class CryptoService {
   }
 
   getRandomOtp(): string {
-    const seedString = Math.floor(Math.random() * 100000000).toString();
+    const seedString = Math.floor(Math.random() * 10000000000).toString();
     const hashedSeed = this.hash(seedString);
     const hashNumbers = Array.from(hashedSeed).map((char) =>
       char.charCodeAt(0),
     );
-    const randomOtp = hashNumbers
+    const randomOtp = this.suffleArray(hashNumbers, 10)
       .splice(0, 5)
       .map((number) => number % 10)
       .join('');
     return randomOtp;
+  }
+
+  private suffleArray(array: any[], round: number) {
+    let newArray = array.slice();
+    for (let i = 0; i < round; i++) {
+      newArray = newArray.sort(() => Math.random() - 0.5);
+    }
+    return newArray;
   }
 }
