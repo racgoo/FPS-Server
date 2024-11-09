@@ -38,7 +38,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const token = client.handshake.auth.token;
     if (!token) return null;
     try {
-      return this.authService.verifyToken(token);
+      return this.authService.decodeToken(token);
     } catch {
       return null;
     }

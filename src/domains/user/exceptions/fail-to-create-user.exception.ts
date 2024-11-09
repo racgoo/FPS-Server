@@ -3,7 +3,7 @@ import {
   DEFAULT_EXCEPTION_STATUS,
 } from 'src/shared/exceptions/default-exception';
 
-import { UserErrorCode } from './error.code';
+import { UserErrorCode } from '../user.constant';
 
 const { DOMAIN_PREFIX, FAILED_TO_CREATE_USER } = UserErrorCode;
 export class FailedToCreateUserException extends CustomException {

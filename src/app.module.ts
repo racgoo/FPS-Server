@@ -12,12 +12,13 @@ import { RedisModule } from './adapters/driven/redis/redis.modue';
 import { SocketModule } from './adapters/driving/socket/socket.module';
 import { ChannelManagementModule } from './adapters/driving/http/channel/channel-management.module';
 import { LogMiddleware } from './shared/middleware/log.middleware';
+import { EmailModule } from './adapters/driven/email/email.modue';
 
 //SHARED MODULES
 const sharedModules = [AuthModule, CryptoModule, EnvModule, LogModule];
 
 //DRIVEN ADAPTER MODULES ( Domain use this modules with adapter pattern )
-const drivenAdapterModules = [SqliteModule, RedisModule];
+const drivenAdapterModules = [SqliteModule, RedisModule, EmailModule];
 
 //DRIVING ADAPTER MODULES ( This use domain modules with adapter pattern )
 const drivingAdapterModules = [

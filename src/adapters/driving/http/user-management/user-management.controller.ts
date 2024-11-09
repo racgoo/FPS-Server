@@ -31,6 +31,15 @@ import {
   EmailDuplicationRequest,
   EmailDuplicationResponse,
 } from './dto/email-duplication.dto';
+import { AuthService } from 'src/shared/modules/auth/auth.service';
+import {
+  EmailAuthenticationRequest,
+  EmailAuthenticationResponse,
+} from './dto/email-authentication.dto';
+import {
+  EmailVerificationRequest,
+  EmailVerificationResponse,
+} from './dto/email-verification.dto';
 // import { JwtTokens } from 'src/shared/decorators/jwt-token.decorator.guard';
 
 @Controller('user-management')
@@ -38,6 +47,7 @@ export class UserManagementController {
   constructor(
     private readonly userManagementService: UserManagementService,
     private readonly envService: EnvService,
+    private readonly authService: AuthService,
   ) {}
 
   @Post('signin')
@@ -128,5 +138,22 @@ export class UserManagementController {
         body.email,
       ),
     };
+  }
+
+  @Post('email-authentication')
+  @HttpCode(HttpStatus.OK)
+  @ResponseType(EmailAuthenticationResponse)
+  async emailAuthentication(@Body() body: EmailAuthenticationRequest) {
+    return await this.authService.generateEmailAuthentication(body.email);
+  }
+
+  @Post('email-verification')
+  @HttpCode(HttpStatus.OK)
+  @ResponseType(EmailVerificationResponse)
+  async emailVerification(@Body() body: EmailVerificationRequest) {
+    return await this.authService.verifyEmailAuthentication(
+      body.email,
+      body.otp,
+    );
   }
 }

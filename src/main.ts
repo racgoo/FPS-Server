@@ -8,6 +8,7 @@ import { ResponseFormatterInterceptor } from './shared/interceptors/reponse-form
 import { EnvService } from './shared/modules/env/env.service';
 import { LogService } from './shared/modules/log/log.service';
 import { RedisIoAdapter } from './adapters/driven/redis/redis.io-adapter';
+import { RedisService } from './adapters/driven/redis/redis.service';
 
 async function bootstrap() {
   //INIT APP
@@ -26,6 +27,7 @@ async function bootstrap() {
   //REDIS BIND CLIENT CONNECT
   const redisIoAdapter = app.get(RedisIoAdapter);
   await redisIoAdapter.connectToRedis();
+  await app.get(RedisService).connect();
 
   //SETUP REDIS WEBSOCKET ADAPTER
   app.useWebSocketAdapter(redisIoAdapter);

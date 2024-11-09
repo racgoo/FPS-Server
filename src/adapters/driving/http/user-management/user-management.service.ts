@@ -12,6 +12,7 @@ import { User } from 'src/domains/user/models/user.model';
 import { InvalidUserPasswordException } from './exceptions/invalid-user-password.exception';
 import { GetExistenceByEmailUseCase } from 'src/domains/user/use-cases/get-existence-by-email.use-case';
 import { Time } from 'src/shared/constants/time';
+import { InvalidEmailOtpException } from 'src/shared/modules/auth/exceptions/invalid-email-otp';
 
 @Injectable()
 export class UserManagementService {
@@ -54,7 +55,11 @@ export class UserManagementService {
     email,
     name,
     password,
-  }: Pick<User, 'email' | 'name' | 'password'>) {
+    verificationToken,
+  }: Pick<User, 'email' | 'name' | 'password'> & {
+    verificationToken: string;
+  }) {
+    await this.checkEmailVerificationToken(email, verificationToken);
     const hashedPassword = this.hashPassword(password);
     return await this.createUserUseCase.execute({
       email,
@@ -63,6 +68,12 @@ export class UserManagementService {
       password: hashedPassword,
       payments: [],
     });
+  }
+
+  async checkEmailVerificationToken(email: string, verificationToken: string) {
+    const { email: verifiedEmail } =
+      this.authService.decodeVerificationToken(verificationToken);
+    if (verifiedEmail !== email) throw new InvalidEmailOtpException();
   }
 
   async getUserById(id: number) {

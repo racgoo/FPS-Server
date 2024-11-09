@@ -9,9 +9,10 @@ import { GetUserByEmailUseCase } from './use-cases/get-user-by-email.use-case';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqliteUserEntity } from 'src/persistent/sqlite/entities/sqlite-user.entity';
 import { GetExistenceByEmailUseCase } from './use-cases/get-existence-by-email.use-case';
+import { EmailModule } from 'src/adapters/driven/email/email.modue';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SqliteUserEntity])],
+  imports: [TypeOrmModule.forFeature([SqliteUserEntity]), EmailModule],
   providers: [
     UserService,
     CreateUserUseCase,

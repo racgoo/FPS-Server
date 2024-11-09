@@ -11,6 +11,9 @@ export class RegisterRequest {
   @IsNotEmpty()
   @MinLength(8)
   password: string;
+  @IsString()
+  @IsNotEmpty()
+  verificationToken: string;
 }
 
 export class RegisterResponse {}

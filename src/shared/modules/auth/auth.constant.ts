@@ -5,6 +5,9 @@ export enum AuthErrorCode {
   EXPIRED_REFRESH_TOKEN = '003',
   INVALID_TOKEN = '004',
   FORBIDDEN = '005',
+  INVALID_OTP = '006',
+  EXPIRED_OTP = '007',
+  NOT_FOUND_OTP = '008',
 }
 
 export enum TokenType {

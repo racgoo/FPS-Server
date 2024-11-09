@@ -13,4 +13,17 @@ export class CryptoService {
   compare({ origin, target }: { origin: string; target: string }) {
     return bcrypt.compareSync(origin, target);
   }
+
+  getRandomOtp(): string {
+    const seedString = Math.floor(Math.random() * 100000000).toString();
+    const hashedSeed = this.hash(seedString);
+    const hashNumbers = Array.from(hashedSeed).map((char) =>
+      char.charCodeAt(0),
+    );
+    const randomOtp = hashNumbers
+      .splice(0, 5)
+      .map((number) => number % 10)
+      .join('');
+    return randomOtp;
+  }
 }
