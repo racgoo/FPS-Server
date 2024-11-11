@@ -15,8 +15,8 @@ import { ExpiredEmailOtpException } from './exceptions/expired-email-otp.excepti
 @Injectable()
 export class AuthService {
   private readonly OTP_TRY_LIMIT = 5;
-  private readonly OTP_EXPIRE_TIME = Time.MINUTE;
-  private readonly OTP_VERIFICATION_TIME = Time.MINUTE;
+  private readonly OTP_EXPIRE_TIME = Time.MINUTE * 3;
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
@@ -133,9 +133,6 @@ export class AuthService {
   }
 
   private generateVerificationToken(email: string) {
-    return this.jwtService.sign(
-      { email },
-      { expiresIn: this.OTP_VERIFICATION_TIME },
-    );
+    return this.jwtService.sign({ email }, { expiresIn: this.OTP_EXPIRE_TIME });
   }
 }
