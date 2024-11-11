@@ -13,6 +13,8 @@ export interface EnvSchema {
   DATABASE_URL: string;
 
   REDIS_URL: string;
+  REDIS_HOST: string;
+  REDIS_PORT: number;
   REDIS_PASSWORD: string;
 
   MAIL_HOST: string;
@@ -38,6 +40,8 @@ export const JoiEnvSchema = Joi.object<EnvSchema>({
   DATABASE_URL: Joi.string().required(),
 
   REDIS_URL: Joi.string().required(),
+  REDIS_HOST: Joi.string().required(),
+  REDIS_PORT: Joi.number().required(),
   REDIS_PASSWORD: Joi.string().required(),
 
   MAIL_HOST: Joi.string().required(),

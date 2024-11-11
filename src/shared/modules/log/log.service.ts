@@ -22,7 +22,7 @@ export class LogService {
 
   private displayLog(log: SqliteLogEntity) {
     if (this.envService.get('NODE_ENV') !== 'production') {
-      console.log(log);
+      // console.log(log);
     }
   }
 }

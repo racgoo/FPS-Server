@@ -9,6 +9,8 @@ import { RedisService } from 'src/adapters/driven/redis/redis.service';
 import { Time } from 'src/shared/constants/time';
 import { InvalidEmailOtpException } from './exceptions/invalid-email-otp';
 import { NotFoundEmailOtpException } from './exceptions/not-found-email-otp.exception';
+import { Otp } from './types/otp.type';
+import { ExpiredEmailOtpException } from './exceptions/expired-email-otp.exception';
 
 @Injectable()
 export class AuthService {
@@ -46,12 +48,46 @@ export class AuthService {
     return await this.setOtpToRedis(email, randomOtp);
   }
 
-  async verifyEmailAuthentication(email: string, otp: string) {
-    const storedOtp = await this.getOtpFromRedis(email);
+  async verifyEmailAuthentication(email: string, code: string) {
+    return await this.redisService.executeWithLock(email, async () => {
+      const storedOtp = await this.getOtpFromRedis(email);
+      this.handleOtpExistence(storedOtp);
+      await this.handleExpiredOtp(storedOtp);
+      await this.handleOtpCodeVerification(storedOtp, code);
+      const verificationToken = this.generateVerificationToken(email);
+      return { verificationToken };
+    });
+  }
+
+  private handleOtpExistence(storedOtp: Otp) {
     if (!storedOtp) throw new NotFoundEmailOtpException();
-    if (storedOtp.otp !== otp) throw new InvalidEmailOtpException();
-    const verificationToken = this.generateVerificationToken(email);
-    return { verificationToken };
+  }
+
+  private async handleOtpCodeVerification(storedOtp: Otp, code: string) {
+    if (storedOtp.code !== code) {
+      await this.handleOtpRetryCountDecrease(storedOtp);
+      throw new InvalidEmailOtpException(
+        `코드가 일치하지 않습니다.\n${storedOtp.retryCount - 1}회 남았습니다.`,
+      );
+    }
+  }
+
+  private async handleOtpRetryCountDecrease(storedOtp: Otp) {
+    storedOtp.retryCount -= 1;
+    await this.setOtpToRedis(
+      storedOtp.email,
+      storedOtp.code,
+      storedOtp.retryCount,
+    );
+  }
+
+  private async handleExpiredOtp(storedOtp: Otp) {
+    if (storedOtp.retryCount <= 0) {
+      await this.redisService.deleteData(this.getOtpRedisKey(storedOtp.email));
+      throw new ExpiredEmailOtpException(
+        '인증 횟수를 초과하였습니다.\n코드를 다시 발급해주세요.',
+      );
+    }
   }
 
   decodeVerificationToken(token: string) {
@@ -69,17 +105,22 @@ export class AuthService {
     });
   }
 
-  private getOtpKey(email: string) {
+  private getOtpRedisKey(email: string) {
     return `email-verification-otp:${email}`;
   }
 
-  private async setOtpToRedis(email: string, otp: string) {
-    const otpKey = this.getOtpKey(email);
-    await this.redisService.setJsonData(
+  private async setOtpToRedis(
+    email: string,
+    code: string,
+    retryCount?: number,
+  ) {
+    const otpKey = this.getOtpRedisKey(email);
+    await this.redisService.setJsonData<Otp>(
       otpKey,
       {
         email,
-        otp,
+        code,
+        retryCount: retryCount ?? this.OTP_TRY_LIMIT,
       },
       this.OTP_EXPIRE_TIME,
     );
@@ -87,11 +128,8 @@ export class AuthService {
   }
 
   private async getOtpFromRedis(email: string) {
-    const otpKey = this.getOtpKey(email);
-    return await this.redisService.getJsonData<{
-      email: string;
-      otp: string;
-    }>(otpKey);
+    const otpKey = this.getOtpRedisKey(email);
+    return await this.redisService.getJsonData<Otp>(otpKey);
   }
 
   private generateVerificationToken(email: string) {

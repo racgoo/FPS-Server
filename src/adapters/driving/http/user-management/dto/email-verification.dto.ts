@@ -5,7 +5,7 @@ export class EmailVerificationRequest {
   @IsEmail()
   email: string;
   @IsString()
-  otp: string;
+  code: string;
 }
 
 export class EmailVerificationResponse {

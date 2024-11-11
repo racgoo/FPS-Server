@@ -153,7 +153,7 @@ export class UserManagementController {
   async emailVerification(@Body() body: EmailVerificationRequest) {
     return await this.authService.verifyEmailAuthentication(
       body.email,
-      body.otp,
+      body.code,
     );
   }
 }
