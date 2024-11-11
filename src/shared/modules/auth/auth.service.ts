@@ -53,6 +53,7 @@ export class AuthService {
       const storedOtp = await this.getOtpFromRedis(email);
       this.handleOtpExistence(storedOtp);
       await this.handleExpiredOtp(storedOtp);
+      await this.handleOtpRetryCountDecrease(storedOtp);
       await this.handleOtpCodeVerification(storedOtp, code);
       const verificationToken = this.generateVerificationToken(email);
       return { verificationToken };
@@ -65,13 +66,18 @@ export class AuthService {
 
   private async handleOtpCodeVerification(storedOtp: Otp, code: string) {
     if (storedOtp.code !== code) {
-      await this.handleOtpRetryCountDecrease(storedOtp);
-      throw new InvalidEmailOtpException(
-        `코드가 일치하지 않습니다.\n${storedOtp.retryCount - 1}회 남았습니다.`,
-      );
+      if (storedOtp.retryCount === 0) {
+        await this.handleExpiredOtp(storedOtp);
+      } else {
+        throw new InvalidEmailOtpException(
+          `코드가 일치하지 않습니다.\n${storedOtp.retryCount}회 남았습니다.`,
+        );
+      }
     }
   }
 
+  //game server에  이런 로직 많을듯
+  //statefull data 변경, 동시에 redis에 저장
   private async handleOtpRetryCountDecrease(storedOtp: Otp) {
     storedOtp.retryCount -= 1;
     await this.setOtpToRedis(
@@ -83,11 +89,15 @@ export class AuthService {
 
   private async handleExpiredOtp(storedOtp: Otp) {
     if (storedOtp.retryCount <= 0) {
-      await this.redisService.deleteData(this.getOtpRedisKey(storedOtp.email));
+      await this.destroyOtp(storedOtp.email);
       throw new ExpiredEmailOtpException(
         '인증 횟수를 초과하였습니다.\n코드를 다시 발급해주세요.',
       );
     }
+  }
+
+  private async destroyOtp(email: string) {
+    await this.redisService.deleteData(this.getOtpRedisKey(email));
   }
 
   decodeVerificationToken(token: string) {
