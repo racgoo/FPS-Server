@@ -19,7 +19,7 @@ import { SigninRequest, SigninResponse } from './dto/signin.dto';
 import { Response } from 'express';
 import { RoleGuard } from 'src/shared/guards/role-auth.guard';
 import { Roles } from 'src/shared/decorators/role.decorator';
-import { UserType } from 'src/persistent/sqlite/entities/sqlite-user.entity';
+import { UserType } from 'src/domains/user/model/vo/user-type.vo';
 import { TokenType } from 'src/shared/modules/auth/auth.constant';
 import { ReissueResponse } from './dto/reissue.dto';
 import { JwtTokenTypes } from 'src/shared/decorators/jwt-token.decorator.guard';
@@ -113,21 +113,21 @@ export class UserManagementController {
     return { user: await this.userManagementService.getUserById(params.id) };
   }
 
-  @Put('user')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Roles(UserType.USER)
-  @ResponseType(UpdateUserResponse)
-  async updateUser(
-    @Body() body: UpdateUserRequest,
-    @GetTokenData() tokenData: TokenData,
-  ) {
-    return (
-      (await this.userManagementService.updateUser({
-        id: tokenData.payload.id,
-        user: body,
-      })) || {}
-    );
-  }
+  // @Put('user')
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  // @Roles(UserType.USER)
+  // @ResponseType(UpdateUserResponse)
+  // async updateUser(
+  //   @Body() body: UpdateUserRequest,
+  //   @GetTokenData() tokenData: TokenData,
+  // ) {
+  //   return (
+  //     (await this.userManagementService.updateUser({
+  //       id: tokenData.payload.id,
+  //       user: body,
+  //     })) || {}
+  //   );
+  // }
 
   @Post('email-duplication')
   @HttpCode(HttpStatus.OK)

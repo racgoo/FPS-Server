@@ -10,6 +10,10 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "@domains/*": ["src/domains/*"],
+      "@adapters/*": ["src/adapters/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,

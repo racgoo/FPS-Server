@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { User } from '../models/user.model';
+import { User } from '../model/entity/user.entity';
 import { GetUserByEmailPort } from '../ports/driving/get-user-by-email.port';
 import { NotFoundUserException } from '../exceptions/not-found-user.exception';
 

@@ -17,5 +17,5 @@ export enum TokenType {
 
 export enum TokenExpireTime {
   ACCESS_TOKEN = '10m',
-  REFRESH_TOKEN = '7s',
+  REFRESH_TOKEN = '1d',
 }

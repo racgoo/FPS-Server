@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserPort } from '../ports/driving/create-user.port';
-import { User } from '../models/user.model';
+import { User } from '../model/entity/user.entity';
 import { UserService } from '../services/user.service';
 import { DuplicateUserException } from '../exceptions/duplicate-user.exception';
 import { FailedToCreateUserException } from '../exceptions/fail-to-create-user.exception';
@@ -15,7 +15,9 @@ export class CreateUserUseCase implements CreateUserPort {
     const existingUser = await this.userService.findByEmail(userData.email);
     if (existingUser) throw new DuplicateUserException();
     try {
-      return await this.userService.create(userData);
+      const newUser = this.userService.create(userData);
+      await this.userService.save(newUser);
+      return newUser;
     } catch {
       throw new FailedToCreateUserException();
     }

@@ -8,6 +8,7 @@ import { ResponseFormatterInterceptor } from './shared/interceptors/reponse-form
 import { EnvService } from './shared/modules/env/env.service';
 import { LogService } from './shared/modules/log/log.service';
 import { RedisIoAdapter } from './adapters/driven/redis/redis.io-adapter';
+import { initializeTransactionalContext } from 'typeorm-transactional';
 
 async function bootstrap() {
   //INIT APP
@@ -46,6 +47,9 @@ async function bootstrap() {
 
   //EXCEPTION FILTER
   app.useGlobalFilters(new JsendExceptionFilter(logService));
+
+  //INIT TRANSACTIONAL CONTEXT
+  initializeTransactionalContext();
 
   //SERVER LISTENER
   const envService = app.get(EnvService);

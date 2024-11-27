@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { EnvService } from '../env/env.service';
+
 @Injectable()
 export class CryptoService {
   constructor(private readonly envService: EnvService) {}

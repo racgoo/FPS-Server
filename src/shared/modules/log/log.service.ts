@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SqliteLogEntity } from 'src/persistent/sqlite/entities/sqlite-log.entity';
+import { SqliteLogEntity } from 'src/adapters/driven/sqlite/entities/sqlite-log.entity';
 import { Repository } from 'typeorm';
 import { EnvService } from '../env/env.service';
 

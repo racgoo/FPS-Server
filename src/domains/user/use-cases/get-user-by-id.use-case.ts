@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { GetUserByIdPort } from '../ports/driving/get-user-by-id.port';
 import { UserService } from '../services/user.service';
-import { User } from '../models/user.model';
+import { User } from '../model/entity/user.entity';
 import { NotFoundUserException } from '../exceptions/not-found-user.exception';
 
 @Injectable()

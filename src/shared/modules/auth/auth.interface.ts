@@ -1,4 +1,4 @@
-import { User } from 'src/domains/user/models/user.model';
+import { User } from 'src/domains/user/model/entity/user.entity';
 import { TokenType } from './auth.constant';
 
 export interface TokenData {

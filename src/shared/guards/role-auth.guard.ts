@@ -2,7 +2,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 import { TokenData } from '../modules/auth/auth.interface';
-import { UserType } from 'src/persistent/sqlite/entities/sqlite-user.entity';
+import { UserType } from 'src/domains/user/model/vo/user-type.vo';
 import { ForbiddenException } from '../modules/auth/exceptions/forbidden.exception';
 
 export const ROLES_KEY = 'roles';

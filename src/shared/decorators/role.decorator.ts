@@ -1,4 +1,4 @@
-import { UserType } from 'src/persistent/sqlite/entities/sqlite-user.entity';
+import { UserType } from 'src/domains/user/model/vo/user-type.vo';
 import { ROLES_KEY } from '../guards/role-auth.guard';
 import { SetMetadata } from '@nestjs/common';
 

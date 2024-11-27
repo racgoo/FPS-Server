@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserUseCase } from 'src/domains/user/use-cases/create-user.use-case';
-import { UserType } from 'src/persistent/sqlite/entities/sqlite-user.entity';
+import { UserType } from 'src/domains/user/model/vo/user-type.vo';
 import { AuthService } from 'src/shared/modules/auth/auth.service';
 import { GetUserByIdUseCase } from 'src/domains/user/use-cases/get-user-by-id.use-case';
 import { GetUserByEmailUseCase } from 'src/domains/user/use-cases/get-user-by-email.use-case';
 import { CryptoService } from 'src/shared/modules/crypto/crypto.service';
 import { Response } from 'express';
 import { TokenType } from 'src/shared/modules/auth/auth.constant';
-import { UpdateUserUseCase } from 'src/domains/user/use-cases/update-user.use-case';
-import { User } from 'src/domains/user/models/user.model';
+import { User } from 'src/domains/user/model/entity/user.entity';
 import { InvalidUserPasswordException } from './exceptions/invalid-user-password.exception';
 import { GetExistenceByEmailUseCase } from 'src/domains/user/use-cases/get-existence-by-email.use-case';
 import { Time } from 'src/shared/constants/time';
@@ -22,7 +21,6 @@ export class UserManagementService {
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly getUserByIdUseCase: GetUserByIdUseCase,
     private readonly getUserByEmailUseCase: GetUserByEmailUseCase,
-    private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly getExistenceByEmailUseCase: GetExistenceByEmailUseCase,
   ) {}
 
@@ -66,7 +64,6 @@ export class UserManagementService {
       name,
       type: UserType.USER,
       password: hashedPassword,
-      payments: [],
     });
   }
 
@@ -86,13 +83,12 @@ export class UserManagementService {
       name: 'test',
       type: UserType.USER,
       password: 'test',
-      payments: [],
     });
   }
 
-  async updateUser({ id, user }: { id: number; user: Partial<User> }) {
-    return await this.updateUserUseCase.execute(id, user);
-  }
+  // async updateUser({ id, user }: { id: number; user: Partial<User> }) {
+  //   return await this.updateUserUseCase.execute(id, user);
+  // }
 
   packageToken({
     res,

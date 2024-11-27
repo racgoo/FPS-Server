@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 import { IsEnum } from 'class-validator';
-import { UserType } from 'src/persistent/sqlite/entities/sqlite-user.entity';
+import { UserType } from 'src/domains/user/model/vo/user-type.vo';
 
 export class UserDto {
   @Expose()

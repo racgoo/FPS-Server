@@ -1,33 +1,31 @@
-import { Injectable } from '@nestjs/common';
-import { User } from '../models/user.model';
-import { Repository } from 'typeorm';
-import { SqliteUserEntity } from 'src/persistent/sqlite/entities/sqlite-user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Inject, Injectable } from '@nestjs/common';
+import { User } from '../model/entity/user.entity';
+import {
+  UserRepositoryPort,
+  UserRepositoryPortSymbol,
+} from '../ports/driven/repository/user.repository.port';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(SqliteUserEntity)
-    private readonly userRepository: Repository<SqliteUserEntity>,
+    @Inject(UserRepositoryPortSymbol)
+    private readonly userRepository: UserRepositoryPort,
   ) {}
 
+  create(user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): User {
+    return this.userRepository.create(user);
+  }
+
   async findById(id: number): Promise<User> {
-    return await this.userRepository.findOneBy({ id });
+    return await this.userRepository.findById(id);
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return await this.userRepository.findOneBy({ email });
+    return await this.userRepository.findByEmail(email);
   }
 
-  async create(
-    user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<User> {
-    return this.userRepository.save(user);
-  }
-
-  async update(id: number, user: Partial<User>): Promise<User> {
-    await this.userRepository.update(id, user);
-    return this.userRepository.findOneBy({ id });
+  async save(user: User): Promise<User> {
+    return await this.userRepository.save(user);
   }
 
   async delete(id: number): Promise<void> {
