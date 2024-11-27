@@ -1,6 +1,6 @@
 import {} from 'class-transformer';
 import { IsString } from 'class-validator';
-import { UserDto } from './user.dto';
+import { UserDto } from './base/user.dto';
 
 export class UpdateUserRequest {
   @IsString()

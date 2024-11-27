@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { ChatRoomDto } from './chat-room.dto';
+import { ChatRoomDto } from './base/chat-room.dto';
 
 export class GetChatRoomRequest {}
 

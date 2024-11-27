@@ -12,7 +12,7 @@ export class ChatRoomDto {
   public readonly chatMessages: ChatMessageDto[];
   @Type(() => ChatUserDto)
   @Expose()
-  public readonly chatUsers: ChatUserDto[];
+  public readonly users: ChatUserDto[];
   @Expose()
   public readonly createdAt: Date;
   @Expose()

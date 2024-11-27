@@ -19,12 +19,26 @@ export class SqliteChatRoomEntity {
   @Column()
   name: string;
 
-  @OneToMany(() => SqliteChatMessageEntity, (message) => message.chatRoom)
+  @OneToMany(() => SqliteChatMessageEntity, (message) => message.chatRoom, {
+    cascade: true,
+  })
   chatMessages: SqliteChatMessageEntity[];
 
-  @ManyToMany(() => SqliteUserEntity, (user) => user)
-  @JoinTable()
-  chatUsers: SqliteUserEntity[];
+  @ManyToMany(() => SqliteUserEntity, (user) => user, {
+    cascade: true,
+  })
+  @JoinTable({
+    name: 'chat_room_user_mapping',
+    joinColumn: {
+      name: 'chat_room_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+  })
+  users: SqliteUserEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

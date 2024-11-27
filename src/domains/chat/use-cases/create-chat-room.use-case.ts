@@ -8,9 +8,11 @@ import { FailedToCreateChatRoomException } from '../exceptions/fail-to-create-ch
 export class CreateChatRoomUseCase implements CreateChatRoomPort {
   constructor(private readonly chatService: ChatService) {}
 
-  async execute(ownerId: number): Promise<ChatRoom> {
+  async execute(params: { ownerId: number }): Promise<ChatRoom> {
+    const { ownerId } = params;
     try {
-      const newChatRoom = await this.chatService.createChatRoom(ownerId);
+      const owner = await this.chatService.findChatUserById(ownerId);
+      const newChatRoom = await this.chatService.createChatRoom(owner);
       await this.chatService.saveChatRoom(newChatRoom);
       return newChatRoom;
     } catch {

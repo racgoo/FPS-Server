@@ -1,20 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { ChatRoom } from '../model/entity/chat-room.entity';
 import { ChatService } from '../services/chat.service';
-import { FailedToCreateChatRoomException } from '../exceptions/fail-to-create-chat-room.exception';
 import { AddUserToChatRoomPort } from '../ports/driving/add-user-to-chat-room.port';
+import { FailedToAddUserToChatRoomException } from '../exceptions/failed-to-add-user-to-chat-room.exception';
 
 @Injectable()
 export class AddUserToChatRoomUseCase implements AddUserToChatRoomPort {
   constructor(private readonly chatService: ChatService) {}
 
-  async execute(userId: number, chatRoomId: number): Promise<ChatRoom> {
+  async execute(params: {
+    userId: number;
+    chatRoomId: number;
+  }): Promise<ChatRoom> {
+    const { userId, chatRoomId } = params;
     try {
       const chatRoom = await this.chatService.findChatRoomById(chatRoomId);
       const chatUser = await this.chatService.findChatUserById(userId);
-      return await this.chatService.addUserToChatRoom(chatUser, chatRoom);
+      const updatedChatRoom = this.chatService.addUserToChatRoom({
+        user: chatUser,
+        chatRoom,
+      });
+      await this.chatService.saveChatRoom(updatedChatRoom);
+      return updatedChatRoom;
     } catch {
-      throw new FailedToCreateChatRoomException();
+      throw new FailedToAddUserToChatRoomException();
     }
   }
 }

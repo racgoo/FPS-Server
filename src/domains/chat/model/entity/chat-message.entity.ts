@@ -1,6 +1,9 @@
+import { ChatUser } from './chat-user.entity';
+
 export class ChatMessage {
-  id: number;
+  id?: number;
   content: string;
-  createdAt: Date;
-  updatedAt: Date;
+  user: ChatUser;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

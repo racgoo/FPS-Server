@@ -1,6 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 import { IsNumber } from 'class-validator';
-import { UserDto } from './user.dto';
+import { UserDto } from './base/user.dto';
 
 export class GetUserRequset {
   @IsNumber()

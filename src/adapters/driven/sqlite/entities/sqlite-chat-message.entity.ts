@@ -19,10 +19,13 @@ export class SqliteChatMessageEntity {
   @Column()
   content: string;
 
-  @ManyToOne(() => SqliteChatRoomEntity, (room) => room)
+  @ManyToOne(() => SqliteChatRoomEntity, (room) => room.chatMessages)
+  @JoinColumn({ name: 'chat_room_id' })
   chatRoom: SqliteChatRoomEntity;
 
-  @ManyToOne(() => SqliteUserEntity, (user) => user)
+  @ManyToOne(() => SqliteUserEntity, (user) => user.id, {
+    eager: true,
+  })
   @JoinColumn({ name: 'user_id' })
   user: SqliteUserEntity;
 

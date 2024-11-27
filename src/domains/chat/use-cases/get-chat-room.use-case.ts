@@ -8,15 +8,19 @@ import { GetChatRoomPort } from '../ports/driving/get-chat-room.port';
 export class GetChatRoomUseCase implements GetChatRoomPort {
   constructor(private readonly chatService: ChatService) {}
 
-  async roomsWithUserId(userId: number): Promise<ChatRoom[]> {
+  async roomsWithUserId(params: { userId: number }): Promise<ChatRoom[]> {
+    const { userId } = params;
     try {
+      const a = await this.chatService.findChatRoomsByUserId(userId);
+      console.log(a[0].users);
       return await this.chatService.findChatRoomsByUserId(userId);
     } catch {
       throw new FailedToGetChatRoomException();
     }
   }
 
-  async roomWithChatRoomId(chatRoomId: number): Promise<ChatRoom> {
+  async roomWithChatRoomId(params: { chatRoomId: number }): Promise<ChatRoom> {
+    const { chatRoomId } = params;
     try {
       return await this.chatService.findChatRoomById(chatRoomId);
     } catch {
