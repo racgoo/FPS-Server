@@ -4,11 +4,13 @@ import { User } from '../model/entity/user.entity';
 import { UserService } from '../services/user.service';
 import { DuplicateUserException } from '../exceptions/duplicate-user.exception';
 import { FailedToCreateUserException } from '../exceptions/fail-to-create-user.exception';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class CreateUserUseCase implements CreateUserPort {
   constructor(private readonly userService: UserService) {}
 
+  @Transactional()
   async execute(
     userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>,
   ): Promise<User> {

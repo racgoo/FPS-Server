@@ -8,7 +8,12 @@ import { ResponseFormatterInterceptor } from './shared/interceptors/reponse-form
 import { EnvService } from './shared/modules/env/env.service';
 import { LogService } from './shared/modules/log/log.service';
 import { RedisIoAdapter } from './adapters/driven/redis/redis.io-adapter';
-import { initializeTransactionalContext } from 'typeorm-transactional';
+import {
+  addTransactionalDataSource,
+  initializeTransactionalContext,
+  StorageDriver,
+} from 'typeorm-transactional';
+import { sqliteDataSourceSymbol } from '@adapters/driven/sqlite/sqlite.module';
 
 async function bootstrap() {
   //INIT APP
@@ -49,7 +54,11 @@ async function bootstrap() {
   app.useGlobalFilters(new JsendExceptionFilter(logService));
 
   //INIT TRANSACTIONAL CONTEXT
-  initializeTransactionalContext();
+  initializeTransactionalContext({
+    storageDriver: StorageDriver.ASYNC_LOCAL_STORAGE,
+  });
+  //ADD TRANSACTIONAL DATA SOURCE
+  addTransactionalDataSource(app.get(sqliteDataSourceSymbol));
 
   //SERVER LISTENER
   const envService = app.get(EnvService);

@@ -11,8 +11,6 @@ export class GetChatRoomUseCase implements GetChatRoomPort {
   async roomsWithUserId(params: { userId: number }): Promise<ChatRoom[]> {
     const { userId } = params;
     try {
-      const a = await this.chatService.findChatRoomsByUserId(userId);
-      console.log(a[0].users);
       return await this.chatService.findChatRoomsByUserId(userId);
     } catch {
       throw new FailedToGetChatRoomException();

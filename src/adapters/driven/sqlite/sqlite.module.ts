@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, getDataSourceToken } from '@nestjs/typeorm';
 import { SqliteUserEntity } from './entities/sqlite-user.entity';
 import { EnvService } from 'src/shared/modules/env/env.service';
 import { SqliteLogEntity } from './entities/sqlite-log.entity';
@@ -29,6 +29,8 @@ const sqliteRepositories = [
   },
 ];
 
+export const sqliteDataSourceSymbol = Symbol('TypeOrmSqliteDataSource');
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -46,7 +48,14 @@ const sqliteRepositories = [
       inject: [EnvService],
     }),
   ],
-  providers: [...sqliteRepositories],
-  exports: [...sqliteRepositories],
+  providers: [
+    ...sqliteRepositories,
+    {
+      provide: sqliteDataSourceSymbol,
+      useFactory: (dataSource: DataSource) => dataSource,
+      inject: [getDataSourceToken()],
+    },
+  ],
+  exports: [...sqliteRepositories, sqliteDataSourceSymbol],
 })
 export class SqliteModule {}

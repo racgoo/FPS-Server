@@ -14,8 +14,8 @@ export class ChatService {
     private readonly chatRepository: ChatRepositoryPort,
   ) {}
 
-  async createChatRoom(user: ChatUser): Promise<ChatRoom> {
-    return await this.chatRepository.createChatRoom(user);
+  async createChatRoom(owner: ChatUser): Promise<ChatRoom> {
+    return await this.chatRepository.createChatRoom(owner);
   }
 
   addUserToChatRoom({

@@ -6,6 +6,7 @@ import { FailedToDeleteChatRoomException } from '../exceptions/fail-to-delete-ch
 @Injectable()
 export class DeleteChatRoomUseCase implements DeleteChatRoomPort {
   constructor(private readonly chatService: ChatService) {}
+
   async execute(params: { chatRoomId: number }) {
     const { chatRoomId } = params;
     try {

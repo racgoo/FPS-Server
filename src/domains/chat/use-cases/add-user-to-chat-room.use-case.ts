@@ -3,11 +3,13 @@ import { ChatRoom } from '../model/entity/chat-room.entity';
 import { ChatService } from '../services/chat.service';
 import { AddUserToChatRoomPort } from '../ports/driving/add-user-to-chat-room.port';
 import { FailedToAddUserToChatRoomException } from '../exceptions/failed-to-add-user-to-chat-room.exception';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class AddUserToChatRoomUseCase implements AddUserToChatRoomPort {
   constructor(private readonly chatService: ChatService) {}
 
+  @Transactional()
   async execute(params: {
     userId: number;
     chatRoomId: number;
