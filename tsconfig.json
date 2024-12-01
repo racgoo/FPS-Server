@@ -12,7 +12,9 @@
     "baseUrl": "./",
     "paths": {
       "@domains/*": ["src/domains/*"],
-      "@adapters/*": ["src/adapters/*"]
+      "@adapters/*": ["src/adapters/*"],
+      "@shared/*": ["src/shared/*"],
+      "@src/*": ["src/*"]
     },
     "incremental": true,
     "skipLibCheck": true,

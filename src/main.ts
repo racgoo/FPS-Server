@@ -1,13 +1,14 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
-import { AppModule } from './app.module';
-import { JsendExceptionFilter } from './shared/filters/exception.filter';
-import { ResponseSerializeInterceptor } from './shared/interceptors/response-serialize.interceptor';
-import { ResponseFormatterInterceptor } from './shared/interceptors/reponse-formatter.interceptor';
-import { EnvService } from './shared/modules/env/env.service';
-import { LogService } from './shared/modules/log/log.service';
-import { RedisIoAdapter } from './adapters/driven/redis/redis.io-adapter';
+import { AppModule } from '@src/app.module';
+import { JsendExceptionFilter } from '@shared/filters/exception.filter';
+import { ResponseSerializeInterceptor } from '@shared/interceptors/response-serialize.interceptor';
+import { ResponseFormatterInterceptor } from '@shared/interceptors/reponse-formatter.interceptor';
+import { EnvService } from '@shared/modules/env/env.service';
+import { LogService } from '@shared/modules/log/log.service';
+import { RedisIoAdapter } from '@adapters/driven/redis/redis.io-adapter';
+
 import {
   addTransactionalDataSource,
   initializeTransactionalContext,
