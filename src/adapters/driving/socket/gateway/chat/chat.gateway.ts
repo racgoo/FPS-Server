@@ -5,12 +5,14 @@ import SocketService from '../../socket.service';
 import { BaseGateway } from '../../base.gateway';
 import { ChannelMessageDrivingDto } from './dto/driving/channel-message.dto';
 import { ChannelMessageDrivenDto } from './dto/driven/channel-message.dto';
+import { GetUserByIdUseCase } from '@domains/user/use-cases/get-user-by-id.use-case';
 
 @WebSocketGateway(parseInt(process.env.WS_PORT))
 export class ChatGateway extends BaseGateway {
   constructor(
     protected readonly authService: AuthService,
     protected readonly socketService: SocketService,
+    private readonly getUserByIdUseCase: GetUserByIdUseCase,
   ) {
     super(authService, socketService);
   }
@@ -35,9 +37,14 @@ export class ChatGateway extends BaseGateway {
     payload: ChannelMessageDrivingDto,
   ) {
     console.log('handleChannelMessage', payload);
+    const sender_id = this.socketService.getSocketUser(client.id);
+    const sender = await this.getUserByIdUseCase.execute(sender_id);
     this.socketService.broadcastToAll<ChannelMessageDrivenDto>(
       ChannelMessageDrivenDto.endPoint,
-      payload,
+      {
+        ...payload,
+        name: sender.name,
+      },
     );
   }
 

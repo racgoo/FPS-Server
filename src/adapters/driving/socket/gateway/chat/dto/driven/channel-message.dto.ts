@@ -6,4 +6,7 @@ export class ChannelMessageDrivenDto {
 
   @IsString()
   public readonly content: string;
+
+  @IsString()
+  public readonly name: string;
 }
