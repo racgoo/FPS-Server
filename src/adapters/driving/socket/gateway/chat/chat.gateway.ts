@@ -6,6 +6,8 @@ import { BaseGateway } from '../../base.gateway';
 import { ChannelMessageDrivingDto } from './dto/driving/channel-message.dto';
 import { ChannelMessageDrivenDto } from './dto/driven/channel-message.dto';
 import { GetUserByIdUseCase } from '@domains/user/use-cases/get-user-by-id.use-case';
+import { UserMessageDrivingDto } from './dto/driving/user-message.dto';
+import { UserMessageDrivenDto } from './dto/driven/user-message.dto';
 
 @WebSocketGateway(parseInt(process.env.WS_PORT))
 export class ChatGateway extends BaseGateway {
@@ -36,9 +38,7 @@ export class ChatGateway extends BaseGateway {
     client: Socket,
     payload: ChannelMessageDrivingDto,
   ) {
-    console.log('handleChannelMessage', payload);
-    const sender_id = this.socketService.getSocketUser(client.id);
-    const sender = await this.getUserByIdUseCase.execute(sender_id);
+    const sender = await this.getSender(client);
     this.socketService.broadcastToAll<ChannelMessageDrivenDto>(
       ChannelMessageDrivenDto.endPoint,
       {
@@ -48,18 +48,22 @@ export class ChatGateway extends BaseGateway {
     );
   }
 
-  //   @SubscribeMessage('chat:message')
-  //   async handleMessage(
-  //     client: Socket,
-  //     payload: { roomId: number; content: string },
-  //   ) {
-  //     const userId = this.getUserId(client);
-  //     const room = `chat:${payload.roomId}`;
+  @SubscribeMessage(UserMessageDrivingDto.endPoint)
+  async handleMessage(client: Socket, payload: UserMessageDrivingDto) {
+    const sender = await this.getSender(client);
+    this.socketService.broadcastToUser<UserMessageDrivenDto>(
+      payload.targetId,
+      UserMessageDrivenDto.endPoint,
+      {
+        name: sender.name,
+        content: payload.content,
+      },
+    );
+  }
 
-  //     this.socketService.broadcastToRoom(room, 'chat:message', {
-  //       userId,
-  //       content: payload.content,
-  //       timestamp: new Date(),
-  //     });
-  //   }
+  private async getSender(client: Socket) {
+    const sender_id = this.socketService.getSocketUser(client.id);
+    const sender = await this.getUserByIdUseCase.execute(sender_id);
+    return sender;
+  }
 }

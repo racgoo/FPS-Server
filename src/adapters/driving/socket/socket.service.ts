@@ -83,12 +83,12 @@ class SocketService {
     this.server.emit(event, data);
   }
 
-  broadcastToUser(userId: number, event: string, data: any) {
+  broadcastToUser<T>(userId: number, event: string, data: T) {
     const sockets = this.getUserSockets(userId);
     sockets.forEach((socket) => socket.emit(event, data));
   }
 
-  broadcastToRoom(room: string, event: string, data: any) {
+  broadcastToRoom<T>(room: string, event: string, data: T) {
     this.server.to(room).emit(event, data);
   }
 
